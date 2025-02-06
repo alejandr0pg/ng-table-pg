@@ -1,0 +1,20 @@
+{
+  "TABLE": {
+    "SEARCH": "Buscar...",
+    "FILTERS": "Filtros",
+    "ACTIONS": "Acciones",
+    "SHOWING": "Mostrando",
+    "OF": "de",
+    "RESULTS": "resultados",
+    "EXPORT_CSV": "Exportar CSV",
+    "EXPORT_EXCEL": "Exportar Excel",
+    "DRAG_MODE": {
+      "TITLE": "Reorder Mode",
+      "ALL_PAGES": "All Pages",
+      "DROP_HERE": "Drop here to move to page {{page}}",
+      "CANCEL": "Cancel Reorder",
+      "SAVE": "Save Order"
+    }
+  },
+  "ALL": "Todos"
+}

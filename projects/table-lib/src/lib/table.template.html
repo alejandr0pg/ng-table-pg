@@ -1,0 +1,373 @@
+@if (loading) {
+<ng-table-pg-skeleton></ng-table-pg-skeleton>
+} @else {
+<div class="space-y-4">
+  <div class="flex justify-between items-center">
+    @if (showSearch) {
+    <div class="relative flex-grow" [ngClass]="{'mr-4': filterOptions.length}">
+      <input
+        type="text"
+        [placeholder]="'TABLE.SEARCH' | translate"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        class="pl-8 pr-4 py-2 w-full border rounded-md bg-white"
+      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute left-2 top-2.5 h-5 w-5 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    </div>
+    } @if(filterOptions.length > 0 ) {
+    <app-dropdown-button
+      buttonClass="px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex items-center"
+      (opened)="showFilters = true"
+      (closed)="showFilters = false"
+    >
+      <ng-container buttonContent>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          />
+        </svg>
+        {{ 'TABLE.FILTERS' | translate }}
+      </ng-container>
+      <ng-container dropdownContent>
+        <div class="p-4 w-56">
+          <div *ngFor="let filter of filterOptions" class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >{{ filter.label | translate }}</label
+            >
+            <select
+              [(ngModel)]="activeFilters[filter.key]"
+              (ngModelChange)="applyFilters()"
+              class="block w-full pl-3 pr-10 py-2 text-base border-1 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="" selected>{{ 'ALL' | translate }}</option>
+              <option
+                *ngFor="let option of filter.options"
+                [value]="option.value ?? option"
+              >
+                {{ (option.label | translate) ?? (option | titlecase |
+                translate) }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </ng-container>
+    </app-dropdown-button>
+    }
+    <div class="flex gap-2 ml-2" *ngIf="showDownloadReports">
+      <button
+        (click)="exportData('csv')"
+        class="px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        {{ 'TABLE.EXPORT_CSV' | translate }}
+      </button>
+      <button
+        (click)="exportData('excel')"
+        class="px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        {{ 'TABLE.EXPORT_EXCEL' | translate }}
+      </button>
+    </div>
+    @if (buttons.length > 0) {
+    <div *ngFor="let button of buttons">
+      <button
+        (click)="button.handler()"
+        class="ml-2 px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex items-center"
+      >
+        <i *ngIf="button.icon" [class]="button.icon"></i>
+        <span class="ml-2">{{ button.label | translate }}</span>
+      </button>
+    </div>
+    }
+  </div>
+
+  <!-- En la sección de la tabla -->
+  <div
+    cdkDropList
+    #tableList="cdkDropList"
+    [cdkDropListData]="paginatedData"
+    [cdkDropListConnectedTo]="pageDropLists"
+    (cdkDropListDropped)="handleDrop($event)"
+    class="overflow-x-auto rounded-lg border border-gray-200"
+  >
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <!-- Nueva columna para el drag handle -->
+          @if (enableDragAndDrop) {
+          <th scope="col" class="w-10 px-6 py-3">
+            <span class="sr-only">Drag Handle</span>
+          </th>
+          }
+          <!-- Columnas existentes -->
+          <th
+            *ngFor="let column of columns"
+            scope="col"
+            [ngStyle]="{
+              'width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto',
+              'min-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto',
+              'max-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto'
+            }"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+            (click)="sort(column.key)"
+          >
+            <div class="flex items-center">
+              {{ column.label | translate }}
+              <svg
+                *ngIf="sortColumn === column.key"
+                xmlns="http://www.w3.org/2000/svg"
+                class="ml-1 h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  [attr.d]="
+                      sortDirection === 'asc'
+                        ? 'M5 15l7-7 7 7'
+                        : 'M19 9l-7 7-7-7'
+                    "
+                />
+              </svg>
+            </div>
+          </th>
+          @if (actions.length > 0) {
+          <th scope="col" class="w-20 px-6 py-3">
+            <span class="sr-only">{{ 'TABLE.ACTIONS' | translate }}</span>
+          </th>
+          }
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr
+          *ngFor="let item of paginatedData; let i = index"
+          cdkDrag
+          [cdkDragData]="item"
+          [cdkDragDisabled]="!enableDragAndDrop"
+          class="hover:bg-gray-50"
+        >
+          <!-- Nueva celda para el drag handle -->
+          @if (enableDragAndDrop) {
+          <td class="w-10 px-6 py-4 whitespace-nowrap" cdkDragHandle>
+            <svg
+              class="h-5 w-5 text-gray-400 cursor-move"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 8h16M4 16h16"
+              />
+            </svg>
+          </td>
+          }
+          <!-- Resto de las celdas -->
+          <!-- In the tbody section, update the td element -->
+
+          <td
+            *ngFor="let column of columns"
+            [ngStyle]="{
+                'width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto',
+                'min-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'fit-content'
+              }"
+            class="px-6 py-4 text-sm text-gray-500 overflow-hidden"
+          >
+            <div class="overflow-hidden">
+              <table-row-content
+                [item]="item"
+                [column]="column"
+                [itemValue]="item[column.key]"
+              />
+            </div>
+          </td>
+          @if (actions.length > 0) {
+          <td
+            class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+          >
+            <app-dropdown-button
+              *ngIf="validActions(item)"
+              [isOpen]="activeDropdownIndex === i"
+              (opened)="toggleDropdown(i)"
+              (closed)="closeAllDropdowns()"
+            >
+              <ng-container buttonContent>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
+                  />
+                </svg>
+              </ng-container>
+              <ng-container dropdownContent>
+                <ng-container *ngFor="let action of actions">
+                  <button
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    *ngIf="action.show && action.show(item) || action.show === undefined"
+                    (click)="action.handler(item); closeAllDropdowns()"
+                  >
+                    {{ action.label | translate }}
+                  </button>
+                </ng-container>
+              </ng-container>
+            </app-dropdown-button>
+          </td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- En la sección de paginación -->
+  <div
+    class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 px-2 py-4"
+  >
+    <div class="flex items-center space-x-2 text-sm text-gray-700">
+      <span>{{ 'TABLE.SHOWING' | translate }}</span>
+      <select
+        [(ngModel)]="itemsPerPage"
+        (ngModelChange)="updatePagination()"
+        class="h-8 w-[70px] rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
+      >
+        <option
+          *ngFor="let option of [5, 10, 20, 30, 40, 50, 100]"
+          [value]="option"
+        >
+          {{ option }}
+        </option>
+      </select>
+      <span
+        >{{ 'TABLE.OF' | translate }} {{ filteredData.length }} {{
+        'TABLE.RESULTS' | translate }}</span
+      >
+    </div>
+    <div class="flex items-center space-x-2">
+      <button
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      <div class="flex items-center">
+        <!-- En la sección de paginación -->
+        <div class="flex items-center">
+          <ng-container *ngFor="let page of getPageNumbers()">
+            <div
+              *ngIf="shouldShowPageButton(page)"
+              cdkDropList
+              [id]="'page-' + page"
+              [cdkDropListConnectedTo]="[tableList]"
+              (cdkDropListDropped)="handlePageDrop($event, page)"
+              (cdkDropListEntered)="handleDragEnter(page)"
+              (cdkDropListExited)="handleDragLeave(page)"
+              class="mx-1 pagination-drop-zone"
+              [class.active-drop-target]="isDragging && dragOverPage === page"
+            >
+              <button
+                (click)="goToPage(page)"
+                [ngClass]="{
+                  'bg-blue-600 text-white border-blue-600': page === currentPage,
+                  'bg-white text-gray-700': page !== currentPage,
+                  'scale-110 shadow-lg bg-blue-100': isDragging && dragOverPage === page
+                }"
+                class="pagination-button h-8 w-8 p-0 rounded-md border border-gray-300 flex items-center justify-center transition-all duration-200"
+              >
+                {{ page }}
+              </button>
+            </div>
+            <span *ngIf="shouldShowEllipsis(page)" class="mx-1">...</span>
+          </ng-container>
+        </div>
+      </div>
+      <button
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage === getTotalPages()"
+        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+}

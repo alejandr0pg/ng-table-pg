@@ -16,6 +16,11 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
+    "paths": {
+      "table-lib": [
+        "./dist/table-lib"
+      ]
+    },
     "module": "ES2022"
   },
   "angularCompilerOptions": {
