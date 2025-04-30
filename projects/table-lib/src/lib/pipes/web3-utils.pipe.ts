@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'web3Utils',
+  standalone: true
 })
 export class Web3UtilsPipe implements PipeTransform {
   constructor() {}
