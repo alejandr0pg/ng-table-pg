@@ -16,5 +16,14 @@
       "SAVE": "Save Order"
     }
   },
-  "ALL": "All"
+  "ALL": "All",
+  "STATUS": {
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "PARTIAL": "Partial",
+    "REJECTED": "Rejected",
+    "PENDING": "Pending",
+    "COMPLETED": "Completed",
+    "IN_PROGRESS": "In Progress"
+  }
 }

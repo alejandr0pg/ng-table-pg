@@ -9,12 +9,21 @@
     "EXPORT_CSV": "Exportar CSV",
     "EXPORT_EXCEL": "Exportar Excel",
     "DRAG_MODE": {
-      "TITLE": "Reorder Mode",
-      "ALL_PAGES": "All Pages",
-      "DROP_HERE": "Drop here to move to page {{page}}",
-      "CANCEL": "Cancel Reorder",
-      "SAVE": "Save Order"
+      "TITLE": "Modo de Reordenamiento",
+      "ALL_PAGES": "Todas las Páginas",
+      "DROP_HERE": "Soltar aquí para mover a la página {{page}}",
+      "CANCEL": "Cancelar Reordenamiento",
+      "SAVE": "Guardar Orden"
     }
   },
-  "ALL": "Todos"
+  "ALL": "Todos",
+  "STATUS": {
+    "ACTIVE": "Activo",
+    "INACTIVE": "Inactivo",
+    "PARTIAL": "Parcial",
+    "REJECTED": "Rechazado",
+    "PENDING": "Pendiente",
+    "COMPLETED": "Completado",
+    "IN_PROGRESS": "En Progreso"
+  }
 }

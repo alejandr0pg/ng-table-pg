@@ -133,7 +133,41 @@ interface ITableActions {
 
 ### Internacionalización
 
-Estructura requerida para las traducciones:
+El componente incluye soporte completo para internacionalización usando @ngx-translate/core.
+
+#### Configuración Básica
+
+1. Importa el módulo de traducciones en tu módulo principal:
+
+```typescript
+import { TableTranslationsModule } from "ng-table-pg";
+
+@NgModule({
+  imports: [TableTranslationsModule.forRoot()],
+})
+export class AppModule {}
+```
+
+#### Configuración Personalizada
+
+Puedes personalizar la ubicación de los archivos de traducción:
+
+```typescript
+@NgModule({
+  imports: [
+    TableTranslationsModule.forRoot({
+      path: "./assets/translations/", // Ruta personalizada
+      prefix: "./i18n-", // Prefijo personalizado
+      suffix: ".json", // Sufijo personalizado
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+#### Estructura de Traducciones
+
+Los archivos de traducción deben seguir esta estructura:
 
 ```json
 {
@@ -145,10 +179,28 @@ Estructura requerida para las traducciones:
     "RESULTS": "resultados",
     "EXPORT_CSV": "Exportar CSV",
     "EXPORT_EXCEL": "Exportar Excel",
-    "ACTIONS": "Acciones"
+    "ACTIONS": "Acciones",
+    "DRAG_MODE": {
+      "TITLE": "Modo de Reordenamiento",
+      "ALL_PAGES": "Todas las Páginas",
+      "DROP_HERE": "Soltar aquí para mover a la página {{page}}",
+      "CANCEL": "Cancelar Reordenamiento",
+      "SAVE": "Guardar Orden"
+    }
+  },
+  "STATUS": {
+    "ACTIVE": "Activo",
+    "INACTIVE": "Inactivo",
+    "PARTIAL": "Parcial",
+    "REJECTED": "Rechazado",
+    "PENDING": "Pendiente",
+    "COMPLETED": "Completado",
+    "IN_PROGRESS": "En Progreso"
   }
 }
 ```
+
+La librería incluye traducciones predeterminadas en inglés y español. Para usar un idioma diferente, simplemente proporciona los archivos de traducción correspondientes en tu aplicación.
 
 ## Contribuir
 

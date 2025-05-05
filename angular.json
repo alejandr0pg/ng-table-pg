@@ -28,11 +28,49 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/table-lib/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
+        }
+      }
+    },
+    "example": {
+      "projectType": "application",
+      "root": "projects/example",
+      "sourceRoot": "projects/example/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/example",
+            "index": "projects/example/src/index.html",
+            "browser": "projects/example/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/example/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/example/src/favicon.ico",
+              "projects/example/src/assets"
+            ],
+            "styles": ["projects/example/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "development": {
+              "buildTarget": "example:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }

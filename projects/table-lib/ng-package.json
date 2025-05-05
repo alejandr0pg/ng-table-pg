@@ -3,5 +3,14 @@
   "dest": "../../dist/table-lib",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    "./src/lib/**/*.scss",
+    "./src/lib/i18n/**/*.json",
+    {
+      "glob": "**/*",
+      "input": "./src/lib/i18n",
+      "output": "/assets/i18n"
+    }
+  ]
 }

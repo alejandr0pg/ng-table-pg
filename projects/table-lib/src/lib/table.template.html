@@ -75,7 +75,7 @@
       </ng-container>
     </app-dropdown-button>
     }
-    <div class="flex gap-2 ml-2" *ngIf="showDownloadReports">
+    <div class="flex gap-2 ml-2" *ngIf="enableExport">
       <button
         (click)="exportData('csv')"
         class="px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-50 flex items-center"
@@ -143,7 +143,7 @@
       <thead class="bg-gray-50">
         <tr>
           <!-- Nueva columna para el drag handle -->
-          @if (enableDragAndDrop) {
+          @if (enableDragDrop) {
           <th scope="col" class="w-10 px-6 py-3">
             <span class="sr-only">Drag Handle</span>
           </th>
@@ -195,11 +195,11 @@
           *ngFor="let item of paginatedData; let i = index"
           cdkDrag
           [cdkDragData]="item"
-          [cdkDragDisabled]="!enableDragAndDrop"
+          [cdkDragDisabled]="!enableDragDrop"
           class="hover:bg-gray-50"
         >
           <!-- Nueva celda para el drag handle -->
-          @if (enableDragAndDrop) {
+          @if (enableDragDrop) {
           <td class="w-10 px-6 py-4 whitespace-nowrap" cdkDragHandle>
             <svg
               class="h-5 w-5 text-gray-400 cursor-move"

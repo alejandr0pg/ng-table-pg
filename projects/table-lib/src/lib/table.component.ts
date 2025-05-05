@@ -53,10 +53,10 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() buttons: ITableButtons[] = [];
   @Input() loading = false;
   @Input() showSearch = true;
-  @Input() showDownloadReports = true;
+  @Input() enableExport = true;
   @Input() itemsPerPage = 10;
   @Input() showActionRow: (item: any) => boolean = (item: any) => true;
-  @Input() enableDragAndDrop = false;
+  @Input() enableDragDrop = false;
   @Output() orderChanged = new EventEmitter<ITableOrderChange>();
 
   filteredData: any[] = [];
@@ -108,7 +108,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   handleDragEnter(page: number) {
-    if (!this.enableDragAndDrop || !this.isDragging) return;
+    if (!this.enableDragDrop || !this.isDragging) return;
 
     this.dragOverPage = page;
 
@@ -498,7 +498,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   handleTableMouseMove(event: MouseEvent) {
-    if (!this.enableDragAndDrop || !this.isDragging) return;
+    if (!this.enableDragDrop || !this.isDragging) return;
 
     const container = event.currentTarget as HTMLElement;
     const rect = container.getBoundingClientRect();

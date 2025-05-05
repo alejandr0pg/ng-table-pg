@@ -1,4 +1,7 @@
-// Al inicio del archivo, actualizar la regla de table
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 table {
   table-layout: auto; // Cambiado de fixed a auto
   width: 100%;
