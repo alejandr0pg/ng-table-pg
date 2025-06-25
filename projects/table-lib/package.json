@@ -1,6 +1,6 @@
 {
   "name": "ng-table-pg",
-  "version": "0.0.1",
+  "version": "0.0.10",
   "author": {
     "name": "Alejandro Pérez Granado",
     "email": "alejo.mde",
@@ -25,6 +25,6 @@
     "tailwindcss": "^3.4.1",
     "file-saver": "^2.0.5",
     "xlsx": "^0.18.5",
-    "@ngx-translate/core": "^16.0.4"
+    "@ngx-translate/core": ">=15.0.0"
   }
 }
