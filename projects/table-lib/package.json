@@ -1,6 +1,6 @@
 {
   "name": "ng-table-pg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A powerful and flexible responsive table component for Angular applications with drag-drop, filtering, pagination, and advanced responsive features",
   "keywords": [
     "angular",
