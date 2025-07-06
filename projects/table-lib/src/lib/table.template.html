@@ -306,10 +306,8 @@
     </table>
   </div>
 
-  <!-- En la sección de paginación -->
-  <div
-    class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 px-2 py-4"
-  >
+  <!-- Paginación mejorada con clase CSS específica -->
+  <div class="pagination-container">
     <div class="flex items-center space-x-2 text-sm text-gray-700">
       <span>{{ 'TABLE.SHOWING' | translate }}</span>
       <select
@@ -333,7 +331,7 @@
       <button
         (click)="goToPage(currentPage - 1)"
         [disabled]="currentPage === 1"
-        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center"
+        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -349,7 +347,7 @@
         </svg>
       </button>
       <div class="flex items-center">
-        <!-- En la sección de paginación -->
+        <!-- Paginación con manejo mejorado de drop zones -->
         <div class="flex items-center">
           <ng-container *ngFor="let page of getPageNumbers()">
             <div
@@ -382,7 +380,7 @@
       <button
         (click)="goToPage(currentPage + 1)"
         [disabled]="currentPage === getTotalPages()"
-        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center"
+        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

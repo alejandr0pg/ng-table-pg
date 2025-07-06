@@ -5,6 +5,46 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2024-01-XX - Correcciones Críticas de Responsive 🔧
+
+### 🐛 Corregido
+
+#### Problemas de Overflow y Desbordamiento
+
+- **Overflow corregido**: Solucionado el problema de desbordamiento horizontal de la tabla
+- **Elementos cortados**: Corregido el problema donde el último registro se veía cortado por la mitad
+- **Paginación mejorada**: La paginación ahora usa la clase CSS `pagination-container` para evitar cortes
+- **Scroll vertical**: Cambiado `overflow-y: hidden` a `overflow-y: visible` para evitar cortes de contenido
+
+#### Estilos CSS Mejorados
+
+- **Contenedor de tabla**: Agregado `width: 100%`, `max-width: 100%` y `box-sizing: border-box`
+- **Altura máxima controlada**: Nueva clase `.with-max-height` para control opcional de altura
+- **Celdas optimizadas**: Mejor manejo de `vertical-align`, `padding` y `text-overflow`
+- **Header sticky mejorado**: Agregado `backdrop-filter` para mejor legibilidad
+- **Responsive móvil**: Reducido `min-width` a 600px para móviles manteniendo funcionalidad
+
+#### Template HTML Optimizado
+
+- **Paginación**: Aplicada clase `pagination-container` para evitar cortes
+- **Botones deshabilitados**: Agregados estilos `disabled:opacity-50` y `disabled:cursor-not-allowed`
+- **Contenido expandible**: Mejor manejo de contenido con `max-width: none` para celdas expandibles
+- **Indicadores de scroll**: Mejorados los indicadores visuales de scroll horizontal
+
+### 🎨 Mejorado
+
+#### Experiencia de Usuario
+
+- **Scroll suave**: Mejor experiencia de scroll horizontal y vertical
+- **Visibilidad completa**: Todos los elementos de la tabla son completamente visibles
+- **Responsive real**: La tabla ahora es verdaderamente responsive sin elementos cortados
+- **Paginación robusta**: La paginación mantiene su altura mínima y no se corta
+
+#### Compatibilidad
+
+- **Compatibilidad hacia atrás**: Todos los cambios son compatibles con versiones anteriores
+- **Configuración automática**: Las mejoras se aplican automáticamente sin cambios de código
+
 ## [0.1.0] - 2024-01-XX - Responsive Design Update 🎉
 
 ### ✨ Agregado
