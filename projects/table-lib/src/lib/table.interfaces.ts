@@ -25,4 +25,10 @@ export interface ITableColumns {
   type?: string;
   transform?: (value: any, row: any) => any;
   width?: number | string;
+  priority?: 1 | 2 | 3;
+  expandable?: boolean;
+  sortable?: boolean;
+  resizable?: boolean;
+  minWidth?: number | string;
+  maxWidth?: number | string;
 }

@@ -1,9 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
+/* Estilos específicos de la tabla */
 table {
-  table-layout: auto; // Cambiado de fixed a auto
+  table-layout: auto;
   width: 100%;
 }
 
@@ -71,22 +72,6 @@ tr.cdk-drag {
   transition: all 0.2s ease;
 }
 
-.cdk-drag-preview {
-  background-color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-radius: 0.375rem;
-  border: 1px solid rgb(229 231 235);
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
 .drop-zone {
   position: relative;
 

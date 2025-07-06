@@ -223,3 +223,64 @@ Para soporte, por favor abre un issue en el repositorio de GitHub o contacta dir
 - [Documentación de Angular](https://angular.dev/)
 - [Documentación de Angular CLI](https://angular.dev/tools/cli)
 - [Documentación de Tailwind CSS](https://tailwindcss.com/docs)
+
+## Changelog
+
+### v0.1.0 - Responsive Design Update 🎉
+
+#### ✨ Nuevas Funcionalidades
+
+- **Sistema Responsive Completo**: Adaptación automática a diferentes tamaños de pantalla
+- **Scroll Horizontal Mejorado**: Con indicadores visuales y scroll suave personalizado
+- **Prioridades de Columnas**: Control granular de qué columnas mostrar en cada dispositivo (Priority 1, 2, 3)
+- **Sticky Header**: Header fijo al hacer scroll con backdrop-filter
+- **Modo Compacto**: Optimizado para pantallas pequeñas
+- **Indicadores de Scroll**: Señales visuales para scroll horizontal
+- **Breakpoints Responsive**: Sistema de media queries para móvil, tablet y desktop
+
+#### 🔧 Nuevas Propiedades
+
+- `responsive` (boolean): Habilita el modo responsive
+- `stickyHeader` (boolean): Header fijo al hacer scroll
+- `compactMode` (boolean): Modo compacto para pantallas pequeñas
+- `horizontalScroll` (boolean): Permite scroll horizontal
+- `minTableWidth` (string): Ancho mínimo de la tabla
+- `maxTableHeight` (string): Altura máxima con scroll vertical
+- `showScrollIndicators` (boolean): Muestra indicadores de scroll
+
+#### 🎨 Mejoras de Estilos
+
+- Scrollbar personalizada para WebKit
+- Indicadores de scroll con gradientes
+- Contenedor con overflow controlado
+- Celdas con manejo de contenido truncado
+- Sistema de prioridades CSS
+
+#### 🔄 Interfaces Actualizadas
+
+- Nuevas propiedades en `ITableColumns`: `priority`, `expandable`, `sortable`, `resizable`, `minWidth`, `maxWidth`
+- Compatibilidad hacia atrás mantenida
+
+#### 📱 Responsive Breakpoints
+
+- **Móvil** (< 640px): Oculta columnas priority 2 y 3
+- **Tablet** (< 768px): Oculta columnas priority 3
+- **Desktop** (≥ 768px): Muestra todas las columnas
+
+#### 🐛 Correcciones
+
+- Mejorado el manejo de scroll horizontal
+- Optimizado el rendimiento en dispositivos móviles
+- Corregidos problemas de overflow en contenedores pequeños
+
+### v0.0.14
+
+- ✨ **Estilos auto-contenidos**: Eliminada la dependencia de Tailwind CSS
+- 🔧 **Mejor compatibilidad**: Funciona con cualquier proyecto Angular
+- 📦 **Tamaño optimizado**: Solo incluye CSS necesario
+- 🐛 **Correcciones**: Skeleton loader mejorado
+
+### Versiones anteriores
+
+- Requerían Tailwind CSS en el proyecto consumidor
+- Dependencias externas para estilos

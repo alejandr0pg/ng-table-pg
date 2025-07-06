@@ -1,6 +1,6 @@
 {
   "name": "ng-table-pg",
-  "version": "0.0.10",
+  "version": "0.1.0",
   "author": {
     "name": "Alejandro Pérez Granado <<Full-Stack>> @alejoperez.dev"
   },
@@ -13,7 +13,13 @@
     "table",
     "component",
     "drag-drop",
-    "tailwind"
+    "responsive",
+    "pagination",
+    "filtering",
+    "sorting",
+    "export",
+    "i18n",
+    "typescript"
   ],
   "license": "MIT",
   "main": "./dist/table-lib/bundles/ng-table-pg.umd.js",
@@ -44,6 +50,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build table-lib --configuration production",
+    "build:css": "cd projects/table-lib && tailwindcss -i ./src/lib/table.component.scss -o ./src/lib/table.component.css --watch=false",
+    "build:dev": "ng build table-lib",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prepublishOnly": "npm run build"

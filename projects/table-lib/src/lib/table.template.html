@@ -130,17 +130,30 @@
     }
   </div>
 
-  <!-- En la sección de la tabla -->
+  <!-- Contenedor de tabla responsive mejorado -->
   <div
     cdkDropList
     #tableList="cdkDropList"
     [cdkDropListData]="paginatedData"
     [cdkDropListConnectedTo]="pageDropLists"
     (cdkDropListDropped)="handleDrop($event)"
-    class="overflow-x-auto rounded-lg border border-gray-200"
+    [class]="getTableContainerClasses()"
+    [ngStyle]="getTableContainerStyles()"
   >
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
+    <!-- Indicadores de scroll -->
+    @if (showScrollIndicators && responsive) {
+    <div
+      class="scroll-indicator left"
+      [class.hidden]="!showLeftScrollIndicator"
+    ></div>
+    <div
+      class="scroll-indicator right"
+      [class.hidden]="!showRightScrollIndicator"
+    ></div>
+    }
+
+    <table [class]="getTableClasses()" [style.min-width]="minTableWidth">
+      <thead [class]="getHeaderClasses()">
         <tr>
           <!-- Nueva columna para el drag handle -->
           @if (enableDragDrop) {
@@ -148,7 +161,7 @@
             <span class="sr-only">Drag Handle</span>
           </th>
           }
-          <!-- Columnas existentes -->
+          <!-- Columnas existentes con prioridades responsive -->
           <th
             *ngFor="let column of columns"
             scope="col"
@@ -157,7 +170,10 @@
               'min-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto',
               'max-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto'
             }"
+            [class]="getColumnPriority(column)"
             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+            [class.px-3]="compactMode"
+            [class.py-2]="compactMode"
             (click)="sort(column.key)"
           >
             <div class="flex items-center">
@@ -184,7 +200,12 @@
             </div>
           </th>
           @if (actions.length > 0) {
-          <th scope="col" class="w-20 px-6 py-3">
+          <th
+            scope="col"
+            class="w-20 px-6 py-3"
+            [class.px-3]="compactMode"
+            [class.py-2]="compactMode"
+          >
             <span class="sr-only">{{ 'TABLE.ACTIONS' | translate }}</span>
           </th>
           }
@@ -200,7 +221,12 @@
         >
           <!-- Nueva celda para el drag handle -->
           @if (enableDragDrop) {
-          <td class="w-10 px-6 py-4 whitespace-nowrap" cdkDragHandle>
+          <td
+            class="w-10 px-6 py-4 whitespace-nowrap"
+            [class.px-3]="compactMode"
+            [class.py-2]="compactMode"
+            cdkDragHandle
+          >
             <svg
               class="h-5 w-5 text-gray-400 cursor-move"
               fill="none"
@@ -216,18 +242,20 @@
             </svg>
           </td>
           }
-          <!-- Resto de las celdas -->
-          <!-- In the tbody section, update the td element -->
-
+          <!-- Celdas de datos con mejor manejo responsive -->
           <td
             *ngFor="let column of columns"
             [ngStyle]="{
                 'width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'auto',
                 'min-width': column.width ? (isNumber(column.width) ? column.width + 'px' : column.width) : 'fit-content'
               }"
-            class="px-6 py-4 text-sm text-gray-500 overflow-hidden"
+            [class]="getColumnPriority(column)"
+            class="px-6 py-4 text-sm text-gray-500"
+            [class.px-3]="compactMode"
+            [class.py-2]="compactMode"
+            [attr.data-label]="column.label | translate"
           >
-            <div class="overflow-hidden">
+            <div class="cell-content" [class.truncate]="!column.expandable">
               <table-row-content
                 [item]="item"
                 [column]="column"
@@ -238,6 +266,8 @@
           @if (actions.length > 0) {
           <td
             class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
+            [class.px-3]="compactMode"
+            [class.py-2]="compactMode"
           >
             <app-dropdown-button
               *ngIf="validActions(item)"
