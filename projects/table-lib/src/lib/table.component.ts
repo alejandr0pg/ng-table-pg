@@ -350,22 +350,76 @@ import { Web3UtilsPipe } from './pipes/web3-utils.pipe';
       ng-table-pg .table-container.responsive {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        scrollbar-width: thin !important;
-        scrollbar-color: rgb(156 163 175) transparent !important;
+        scrollbar-width: auto !important;
+        scrollbar-color: rgb(156 163 175) rgb(243 244 246) !important;
       }
       ng-table-pg .table-container.responsive::-webkit-scrollbar {
-        height: 8px !important;
+        height: 14px !important;
+        width: 14px !important;
       }
       ng-table-pg .table-container.responsive::-webkit-scrollbar-track {
         background: rgb(243 244 246) !important;
-        border-radius: 4px !important;
+        border-radius: 8px !important;
+        margin: 2px !important;
       }
       ng-table-pg .table-container.responsive::-webkit-scrollbar-thumb {
         background: rgb(156 163 175) !important;
-        border-radius: 4px !important;
+        border-radius: 8px !important;
+        border: 2px solid rgb(243 244 246) !important;
+        min-height: 20px !important;
       }
       ng-table-pg .table-container.responsive::-webkit-scrollbar-thumb:hover {
         background: rgb(107 114 128) !important;
+        border: 2px solid rgb(229 231 235) !important;
+      }
+      ng-table-pg .table-container.responsive::-webkit-scrollbar-thumb:active {
+        background: rgb(75 85 99) !important;
+      }
+      ng-table-pg .table-container.responsive::-webkit-scrollbar-corner {
+        background: rgb(243 244 246) !important;
+      }
+      /* Scrollbar siempre visible */
+      ng-table-pg .table-container.always-show-scrollbar {
+        scrollbar-width: auto !important;
+        overflow-x: scroll !important;
+      }
+      ng-table-pg .table-container.always-show-scrollbar::-webkit-scrollbar {
+        height: 14px !important;
+        width: 14px !important;
+        display: block !important;
+      }
+      /* Estilo prominente del scrollbar */
+      ng-table-pg .table-container.scrollbar-prominent::-webkit-scrollbar {
+        height: 18px !important;
+        width: 18px !important;
+      }
+      ng-table-pg .table-container.scrollbar-prominent::-webkit-scrollbar-thumb {
+        background: rgb(99 102 241) !important;
+        border: 3px solid rgb(243 244 246) !important;
+        border-radius: 10px !important;
+      }
+      ng-table-pg .table-container.scrollbar-prominent::-webkit-scrollbar-thumb:hover {
+        background: rgb(79 70 229) !important;
+        border: 3px solid rgb(229 231 235) !important;
+      }
+      ng-table-pg .table-container.scrollbar-prominent::-webkit-scrollbar-track {
+        background: rgb(243 244 246) !important;
+        border-radius: 10px !important;
+        border: 1px solid rgb(229 231 235) !important;
+      }
+      /* Estilo mínimo del scrollbar */
+      ng-table-pg .table-container.scrollbar-minimal::-webkit-scrollbar {
+        height: 8px !important;
+        width: 8px !important;
+      }
+      ng-table-pg .table-container.scrollbar-minimal::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.7) !important;
+        border: none !important;
+        border-radius: 4px !important;
+      }
+      ng-table-pg .table-container.scrollbar-minimal::-webkit-scrollbar-track {
+        background: transparent !important;
+        border: none !important;
       }
       ng-table-pg .scroll-indicator {
         position: absolute !important;
@@ -431,13 +485,44 @@ import { Web3UtilsPipe } from './pipes/web3-utils.pipe';
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
       }
-      @media (max-width: 480px) {
-        ng-table-pg .col-priority-3 {
+      /* Responsive con scroll horizontal - mantener todas las columnas visibles */
+      ng-table-pg .table-container.responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      
+      ng-table-pg .responsive-table {
+        table-layout: auto !important;
+        width: 100% !important;
+      }
+      
+      /* Comportamiento de scroll horizontal (default) */
+      ng-table-pg .table-container.scroll-mode {
+        overflow-x: auto !important;
+      }
+      
+      /* Solo aplicar min-width cuando sea necesario */
+      ng-table-pg .table-container.scroll-mode .responsive-table {
+        width: 100% !important;
+        table-layout: auto !important;
+      }
+      
+      /* Asegurar que las columnas mantengan su ancho cuando está en modo scroll */
+      ng-table-pg .table-container.scroll-mode .responsive-table th,
+      ng-table-pg .table-container.scroll-mode .responsive-table td {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      
+      /* Comportamiento de ocultar columnas (solo si hideColumnsOnResize es true) */
+      @media screen and (max-width: 640px) {
+        ng-table-pg .table-container.hide-columns-mode .col-priority-3 {
           display: none !important;
         }
       }
-      @media (max-width: 640px) {
-        ng-table-pg .col-priority-2 {
+      @media screen and (max-width: 768px) {
+        ng-table-pg .table-container.hide-columns-mode .col-priority-2 {
           display: none !important;
         }
       }
@@ -465,6 +550,9 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() minTableWidth = '800px'; // Ancho mínimo de la tabla
   @Input() maxTableHeight = 'none'; // Altura máxima de la tabla
   @Input() showScrollIndicators = true; // Muestra indicadores de scroll
+  @Input() alwaysShowScrollbar = false; // Fuerza la visibilidad del scrollbar
+  @Input() scrollbarStyle: 'default' | 'prominent' | 'minimal' = 'default'; // Estilo del scrollbar
+  @Input() hideColumnsOnResize = false; // Si true, oculta columnas por prioridad. Si false, usa scroll horizontal
 
   @Output() orderChanged = new EventEmitter<ITableOrderChange>();
 
@@ -488,6 +576,7 @@ export class TableComponent implements OnInit, OnChanges {
   showLeftScrollIndicator = false;
   showRightScrollIndicator = false;
   private tableContainer?: HTMLElement;
+  private resizeListener?: () => void;
 
   constructor(private translate: TranslateService) {}
 
@@ -496,10 +585,15 @@ export class TableComponent implements OnInit, OnChanges {
     this.updatePagination();
     this.updatePageDropLists();
     this.setupScrollListeners();
+    this.setupResizeListener();
+    
+    // Log responsive status for debugging
+    this.logResponsiveStatus();
   }
 
   ngOnDestroy() {
     this.removeScrollListeners();
+    this.removeResizeListener();
   }
 
   /**
@@ -555,6 +649,30 @@ export class TableComponent implements OnInit, OnChanges {
       classes.push('responsive');
     }
 
+    if (this.alwaysShowScrollbar) {
+      classes.push('always-show-scrollbar');
+    }
+
+    // Agregar clase del estilo de scrollbar
+    switch (this.scrollbarStyle) {
+      case 'prominent':
+        classes.push('scrollbar-prominent');
+        break;
+      case 'minimal':
+        classes.push('scrollbar-minimal');
+        break;
+      // 'default' no necesita clase adicional
+    }
+
+    // Agregar clase según el comportamiento responsive
+    if (this.responsive) {
+      if (this.hideColumnsOnResize) {
+        classes.push('hide-columns-mode');
+      } else {
+        classes.push('scroll-mode');
+      }
+    }
+
     return classes.join(' ');
   }
 
@@ -577,6 +695,35 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Obtener estilos para la tabla
+   */
+  getTableStyles(): any {
+    const styles: any = {};
+
+    // Solo aplicar min-width si tenemos muchas columnas o anchos específicos
+    if (this.shouldUseMinWidth()) {
+      styles['min-width'] = this.calculateMinTableWidth();
+    }
+
+    return styles;
+  }
+
+  /**
+   * Determinar si debemos usar min-width
+   */
+  private shouldUseMinWidth(): boolean {
+    if (!this.columns || this.columns.length === 0) return false;
+    
+    // Usar min-width si:
+    // 1. Hay más de 6 columnas
+    // 2. O si alguna columna tiene width específico
+    // 3. O si está en modo scroll explícito
+    return this.columns.length > 6 || 
+           this.columns.some(col => col.width) ||
+           (this.responsive && !this.hideColumnsOnResize);
+  }
+
+  /**
    * Obtener clases CSS para el header
    */
   getHeaderClasses(): string {
@@ -595,16 +742,48 @@ export class TableComponent implements OnInit, OnChanges {
   getTableContainerStyles(): any {
     const styles: any = {};
 
-    if (this.minTableWidth) {
-      styles['min-width'] = this.minTableWidth;
-    }
-
     if (this.maxTableHeight && this.maxTableHeight !== 'none') {
       styles['max-height'] = this.maxTableHeight;
       styles['overflow-y'] = 'auto';
     }
 
     return styles;
+  }
+
+  /**
+   * Calcular ancho mínimo de tabla basado en columnas
+   */
+  calculateMinTableWidth(): string {
+    if (!this.columns || this.columns.length === 0) {
+      return this.minTableWidth;
+    }
+
+    let totalWidth = 0;
+    
+    // Sumar anchos de columnas
+    this.columns.forEach(column => {
+      if (column.width) {
+        const width = typeof column.width === 'number' ? column.width : parseInt(column.width);
+        totalWidth += width || 150; // default 150px si no se puede parsear
+      } else {
+        totalWidth += 150; // default width por columna
+      }
+    });
+
+    // Agregar espacio para drag handle si está habilitado
+    if (this.enableDragDrop) {
+      totalWidth += 60; // 60px para drag handle
+    }
+
+    // Agregar espacio para acciones si existen
+    if (this.actions && this.actions.length > 0) {
+      totalWidth += 100; // 100px para columna de acciones
+    }
+
+    // Asegurar un mínimo
+    const minWidth = Math.max(totalWidth, parseInt(this.minTableWidth) || 800);
+    
+    return `${minWidth}px`;
   }
 
   /**
@@ -1127,5 +1306,47 @@ export class TableComponent implements OnInit, OnChanges {
 
   isNumber(value: any): boolean {
     return typeof value === 'number';
+  }
+
+  /**
+   * Configurar listener para cambios de tamaño de ventana
+   */
+  private setupResizeListener(): void {
+    this.resizeListener = () => {
+      // Trigger change detection on resize to update responsive classes
+      this.handleScroll();
+    };
+    window.addEventListener('resize', this.resizeListener);
+  }
+
+  /**
+   * Remover listener de resize
+   */
+  private removeResizeListener(): void {
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+  }
+
+  /**
+   * Log responsive status for debugging
+   */
+  private logResponsiveStatus(): void {
+    setTimeout(() => {
+      console.log('🔍 ng-table-pg Responsive Debug:', {
+        responsive: this.responsive,
+        horizontalScroll: this.horizontalScroll,
+        compactMode: this.compactMode,
+        minTableWidth: this.minTableWidth,
+        columnsWithPriority: this.columns.map(col => ({
+          key: col.key,
+          priority: col.priority || 1,
+          className: this.getColumnPriority(col)
+        })),
+        tableContainerClasses: this.getTableContainerClasses(),
+        windowWidth: window.innerWidth,
+        screenSize: window.innerWidth < 640 ? 'mobile' : window.innerWidth < 768 ? 'tablet' : 'desktop'
+      });
+    }, 100);
   }
 }

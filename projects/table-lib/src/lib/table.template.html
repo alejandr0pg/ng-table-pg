@@ -152,7 +152,7 @@
     ></div>
     }
 
-    <table [class]="getTableClasses()" [style.min-width]="minTableWidth">
+    <table [class]="getTableClasses()" [ngStyle]="getTableStyles()">
       <thead [class]="getHeaderClasses()">
         <tr>
           <!-- Nueva columna para el drag handle -->

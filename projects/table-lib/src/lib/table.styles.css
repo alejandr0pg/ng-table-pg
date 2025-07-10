@@ -205,15 +205,35 @@
   /* Ocultar en pantallas pequeñas */
 }
 
-@media (max-width: 480px) {
-  .col-priority-3 {
-    display: none;
-  }
+/* Responsive con scroll horizontal - mantener todas las columnas */
+.table-container.responsive {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
-@media (max-width: 640px) {
-  .col-priority-2 {
-    display: none;
+.responsive-table {
+  table-layout: fixed !important;
+  min-width: max-content !important;
+  width: auto !important;
+}
+
+/* Asegurar que las columnas mantengan su ancho */
+.responsive-table th,
+.responsive-table td {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 100px !important;
+}
+
+/* Forzar scroll horizontal en pantallas pequeñas */
+@media (max-width: 768px) {
+  .table-container.responsive {
+    overflow-x: scroll !important;
+  }
+  .responsive-table {
+    min-width: 1200px !important;
   }
 }
 

@@ -5,6 +5,89 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-07-10 - Scrollbar Horizontal Mejorado y Responsive Inteligente 🚀
+
+### ✨ Agregado
+
+#### Sistema de Scrollbar Horizontal Avanzado
+
+- **Nuevas propiedades de configuración**:
+  - `alwaysShowScrollbar` (boolean): Fuerza la visibilidad del scrollbar horizontal
+  - `scrollbarStyle` ('default' | 'prominent' | 'minimal'): Estilos personalizables del scrollbar
+  - `hideColumnsOnResize` (boolean): Control del comportamiento responsive
+
+#### Estilos de Scrollbar Personalizables
+
+- **Scrollbar Default**: 14px, gris, diseño estándar mejorado
+- **Scrollbar Prominent**: 18px, azul índigo, máxima visibilidad
+- **Scrollbar Minimal**: 8px, semi-transparente, diseño discreto
+- **Estados interactivos**: Hover y active states para mejor UX
+- **Compatibilidad Firefox**: Usando `scrollbar-width` y `scrollbar-color`
+
+#### Responsive Inteligente
+
+- **Modo Scroll Horizontal** (default): Mantiene todas las columnas visibles con scroll automático
+- **Modo Ocultar Columnas** (opcional): Comportamiento clásico de ocultar columnas por prioridad
+- **Detección automática**: Aplica scroll solo cuando es necesario (>6 columnas o anchos específicos)
+- **Cálculo dinámico**: Ancho mínimo calculado automáticamente basado en columnas
+
+### 🎨 Mejorado
+
+#### Comportamiento Responsive Optimizado
+
+- **Desktop**: 
+  - Pocas columnas: Se extiende naturalmente sin scroll
+  - Muchas columnas: Scroll horizontal automático preservando diseño
+- **Mobile/Tablet**: Scroll horizontal siempre activo para mantener diseño intacto
+- **Sin columnas rotas**: Las columnas mantienen sus anchos configurados
+
+#### Experiencia de Usuario
+
+- **Scroll suave**: `-webkit-overflow-scrolling: touch` para móviles
+- **Indicadores visuales**: Gradientes que muestran contenido oculto
+- **Resize listener**: Responsive dinámico al cambiar tamaño de ventana
+- **Debug mejorado**: Logs detallados del estado responsive
+
+#### API y Configuración
+
+- **Backward compatible**: Todos los cambios mantienen compatibilidad
+- **Configuración granular**: Control total sobre el comportamiento del scrollbar
+- **Estilos CSS optimizados**: Mayor especificidad y rendimiento
+
+### 🔧 Cambiado
+
+#### Arquitectura CSS
+
+- **Clases condicionales**: `.scroll-mode` vs `.hide-columns-mode`
+- **Especificidad mejorada**: Uso de `ng-table-pg` como prefijo en todos los estilos
+- **Media queries optimizados**: Breakpoints más consistentes (640px, 768px)
+
+#### Lógica de Renderizado
+
+- **Cálculo inteligente**: `shouldUseMinWidth()` determina cuándo aplicar restricciones
+- **Estilos dinámicos**: `getTableStyles()` aplica estilos según contexto
+- **Listener de resize**: Manejo dinámico de cambios de ventana
+
+### 📚 Documentación
+
+#### Nuevos Ejemplos
+
+- **Configuración de scrollbar**: Ejemplos de todos los estilos disponibles
+- **Modos responsive**: Comparación entre scroll y ocultar columnas
+- **Casos de uso**: Tabla con pocas vs muchas columnas
+
+#### API Actualizada
+
+- Documentación completa de nuevas propiedades
+- Ejemplos de configuración avanzada
+- Guía de migración para usuarios existentes
+
+### 🐛 Fixes Incluidos
+
+- **Paginación corregida**: Fix del bug de itemsPerPage (de v0.1.8)
+- **Conversión de tipos**: Manejo robusto de string/number en paginación
+- **Consistencia CSS**: Unificación de breakpoints entre archivos
+
 ## [0.1.8] - 2025-07-10 - Corrección Crítica de Paginación 🐛
 
 ### 🐛 Corregido

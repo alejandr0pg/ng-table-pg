@@ -326,13 +326,16 @@ export class ExampleComponent {
 
 | Propiedad              | Tipo      | Defecto   | Descripción                           |
 | ---------------------- | --------- | --------- | ------------------------------------- |
-| `responsive`           | `boolean` | `true`    | Habilita el modo responsive           |
-| `stickyHeader`         | `boolean` | `false`   | Header fijo al hacer scroll           |
-| `compactMode`          | `boolean` | `false`   | Modo compacto para pantallas pequeñas |
-| `horizontalScroll`     | `boolean` | `true`    | Permite scroll horizontal             |
-| `minTableWidth`        | `string`  | `'800px'` | Ancho mínimo de la tabla              |
-| `maxTableHeight`       | `string`  | `'none'`  | Altura máxima con scroll vertical     |
-| `showScrollIndicators` | `boolean` | `true`    | Muestra indicadores de scroll         |
+| `responsive`           | `boolean` | `true`      | Habilita el modo responsive           |
+| `stickyHeader`         | `boolean` | `false`     | Header fijo al hacer scroll           |
+| `compactMode`          | `boolean` | `false`     | Modo compacto para pantallas pequeñas |
+| `horizontalScroll`     | `boolean` | `true`      | Permite scroll horizontal             |
+| `minTableWidth`        | `string`  | `'800px'`   | Ancho mínimo de la tabla              |
+| `maxTableHeight`       | `string`  | `'none'`    | Altura máxima con scroll vertical     |
+| `showScrollIndicators` | `boolean` | `true`      | Muestra indicadores de scroll         |
+| `alwaysShowScrollbar`  | `boolean` | `false`     | Fuerza la visibilidad del scrollbar   |
+| `scrollbarStyle`       | `string`  | `'default'` | Estilo del scrollbar horizontal       |
+| `hideColumnsOnResize`  | `boolean` | `false`     | Si true oculta columnas, si false usa scroll |
 
 ### Configuración de Columnas
 
@@ -357,8 +360,8 @@ interface ITableColumns {
 ### Prioridades de Columnas
 
 - **Priority 1**: Siempre visible (columnas esenciales)
-- **Priority 2**: Oculta en móvil (< 640px)
-- **Priority 3**: Oculta en tablet y móvil (< 768px)
+- **Priority 2**: Oculta en tablet y móvil (< 768px)
+- **Priority 3**: Oculta en móvil (< 640px)
 
 ## Ejemplos de Uso
 
@@ -397,8 +400,72 @@ columns: ITableColumns[] = [
 ### Tabla con Scroll Horizontal Controlado
 
 ```html
-<ng-table-pg [data]="data" [columns]="columns" [responsive]="true" [horizontalScroll]="true" [showScrollIndicators]="true" [minTableWidth]="'1200px'" [maxTableHeight]="'400px'"></ng-table-pg>
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [responsive]="true" 
+  [horizontalScroll]="true" 
+  [showScrollIndicators]="true" 
+  [minTableWidth]="'1200px'" 
+  [maxTableHeight]="'400px'">
+</ng-table-pg>
 ```
+
+### Tabla con Scrollbar Personalizado
+
+```html
+<!-- Scrollbar siempre visible -->
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [alwaysShowScrollbar]="true">
+</ng-table-pg>
+
+<!-- Scrollbar prominente -->
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [scrollbarStyle]="'prominent'">
+</ng-table-pg>
+
+<!-- Scrollbar mínimo -->
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [scrollbarStyle]="'minimal'">
+</ng-table-pg>
+```
+
+#### Estilos de Scrollbar
+
+- **`default`**: Scrollbar estándar con diseño coherente (14px, gris)
+- **`prominent`**: Scrollbar más grande y colorido (18px, azul índigo)
+- **`minimal`**: Scrollbar discreto y pequeño (8px, semi-transparente)
+
+### Tabla con Comportamiento Responsive Personalizado
+
+```html
+<!-- Modo scroll horizontal (recomendado) - mantiene diseño intacto -->
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [responsive]="true"
+  [hideColumnsOnResize]="false">
+</ng-table-pg>
+
+<!-- Modo ocultar columnas - para casos específicos -->
+<ng-table-pg 
+  [data]="data" 
+  [columns]="columns" 
+  [responsive]="true"
+  [hideColumnsOnResize]="true">
+</ng-table-pg>
+```
+
+#### Comportamientos Responsive
+
+- **`hideColumnsOnResize: false`** (default): Mantiene todas las columnas visibles con scroll horizontal
+- **`hideColumnsOnResize: true`**: Oculta columnas según prioridad en pantallas pequeñas
 
 ### Tabla Compacta para Móviles
 
