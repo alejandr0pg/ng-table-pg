@@ -306,15 +306,11 @@
     </table>
   </div>
 
-  <!-- Paginación mejorada con clase CSS específica -->
+  <!-- Paginación mejorada con estilos coherentes -->
   <div class="pagination-container">
-    <div class="flex items-center space-x-2 text-sm text-gray-700">
+    <div class="pagination-info">
       <span>{{ 'TABLE.SHOWING' | translate }}</span>
-      <select
-        [(ngModel)]="itemsPerPage"
-        (ngModelChange)="updatePagination()"
-        class="h-8 w-[70px] rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
-      >
+      <select [(ngModel)]="itemsPerPage" (ngModelChange)="onItemsPerPageChange()">
         <option
           *ngFor="let option of [5, 10, 20, 30, 40, 50, 100]"
           [value]="option"
@@ -331,7 +327,7 @@
       <button
         (click)="goToPage(currentPage - 1)"
         [disabled]="currentPage === 1"
-        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        class="pagination-button"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -363,24 +359,25 @@
             >
               <button
                 (click)="goToPage(page)"
+                [class.active]="page === currentPage"
                 [ngClass]="{
-                  'bg-blue-600 text-white border-blue-600': page === currentPage,
-                  'bg-white text-gray-700': page !== currentPage,
                   'scale-110 shadow-lg bg-blue-100': isDragging && dragOverPage === page
                 }"
-                class="pagination-button h-8 w-8 p-0 rounded-md border border-gray-300 flex items-center justify-center transition-all duration-200"
+                class="pagination-button transition-all duration-200"
               >
                 {{ page }}
               </button>
             </div>
-            <span *ngIf="shouldShowEllipsis(page)" class="mx-1">...</span>
+            <span *ngIf="shouldShowEllipsis(page)" class="mx-1 text-gray-500"
+              >...</span
+            >
           </ng-container>
         </div>
       </div>
       <button
         (click)="goToPage(currentPage + 1)"
         [disabled]="currentPage === getTotalPages()"
-        class="h-8 w-8 p-0 rounded-md border border-gray-300 bg-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        class="pagination-button"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

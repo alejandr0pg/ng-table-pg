@@ -22,17 +22,23 @@ import { TableComponent } from 'ng-table-pg';
   `
 })
 export class AppComponent {
-  exampleData = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', status: true },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', status: false },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', status: 'pending' }
-  ];
+  // Generate more data to test pagination
+  exampleData = Array(35).fill(null).map((_, i) => ({
+    id: i + 1,
+    name: `User ${i + 1}`,
+    email: `user${i + 1}@example.com`,
+    status: i % 3 === 0 ? 'active' : i % 3 === 1 ? 'inactive' : 'pending',
+    createdAt: new Date(2023, 0, 1 + i).toISOString(),
+    role: i % 2 === 0 ? 'admin' : 'user'
+  }));
 
   columns = [
-    { key: 'id', label: 'ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'status', label: 'Status', type: 'status' }
+    { key: 'id', label: 'ID', width: 80 },
+    { key: 'name', label: 'Name', width: 150 },
+    { key: 'email', label: 'Email', width: 200 },
+    { key: 'status', label: 'Status', type: 'status', width: 120 },
+    { key: 'createdAt', label: 'Created', type: 'date', width: 120 },
+    { key: 'role', label: 'Role', width: 100 }
   ];
 
   onOrderChange(event: any) {

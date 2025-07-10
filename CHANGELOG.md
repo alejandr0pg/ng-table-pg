@@ -5,7 +5,124 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.2] - 2025-06-06 - Correcciones Críticas de Responsive 🔧
+## [0.1.8] - 2025-07-10 - Corrección Crítica de Paginación 🐛
+
+### 🐛 Corregido
+
+#### Problema de Paginación con itemsPerPage
+
+- **Bug crítico corregido**: Solucionado el problema donde al cambiar la cantidad de elementos por página y luego cambiar de página, se seguían mostrando más registros de los configurados
+- **Conversión de tipos**: Implementada conversión explícita de string a number para `itemsPerPage` en todas las operaciones de paginación
+- **Métodos afectados corregidos**:
+  - `updatePagination()`: Ahora convierte `itemsPerPage` a number antes de calcular índices
+  - `onItemsPerPageChange()`: Asegura que `itemsPerPage` sea tratado como number
+  - `getTotalPages()`: Corregido cálculo con conversión numérica
+  - `handlePageDrop()`, `onDrop()`, `handleDrop()`: Actualizados todos los métodos de drag-and-drop
+
+### 🧪 Mejorado
+
+#### Testing y Validación
+
+- **Tests unitarios agregados**: Nuevos tests específicos para validar el comportamiento de paginación
+- **Test de conversión de tipos**: Verificación de que `itemsPerPage` como string se convierte correctamente
+- **Test de cambio de página**: Validación de que el tamaño de página se mantiene al navegar entre páginas
+- **Validación manual**: Test JavaScript independiente que confirma la corrección del bug
+
+#### Robustez del Componente
+
+- **Mejor manejo de tipos**: El componente ahora maneja correctamente valores string y number para `itemsPerPage`
+- **Consistencia en cálculos**: Todos los cálculos relacionados con paginación usan valores numéricos
+- **Compatibilidad hacia atrás**: Los cambios no afectan la API existente
+
+### 📝 Detalles Técnicos
+
+#### Antes (Problemático):
+```typescript
+const startIndex = (this.currentPage - 1) * this.itemsPerPage; // Si itemsPerPage era "5", esto causaba problemas
+```
+
+#### Después (Corregido):
+```typescript
+const itemsPerPageNumber = Number(this.itemsPerPage);
+const startIndex = (this.currentPage - 1) * itemsPerPageNumber; // Ahora siempre es numérico
+```
+
+#### Ejemplo del Problema:
+- Página 1 con 5 elementos por página: Mostraba correctamente 5 elementos
+- Cambiar a página 2: Mostraba incorrectamente 20 elementos en lugar de 5
+- **Causa**: Operación `"5" * 4 = "5555"` en lugar de `5 * 4 = 20`
+
+## [0.1.4] - 2025-06-06 - Correcciones Completas de Scroll y Paginación 🎯
+
+### 🐛 Corregido
+
+#### Problemas Críticos de Scroll
+
+- **Scroll horizontal controlado**: El scroll horizontal ahora aparece SOLO en la tabla, no en toda la página
+- **Altura de tabla corregida**: La tabla ahora tiene una altura máxima controlada (70vh) para evitar desbordamiento
+- **Contenedor optimizado**: Corregido el problema donde el contenedor causaba scroll en toda la página
+- **Overflow inteligente**: Implementado sistema de overflow que mantiene el scroll dentro del componente
+
+#### Estilos de Paginación Mejorados
+
+- **Diseño coherente**: Los estilos del footer y paginación ahora son coherentes con el diseño de la tabla
+- **Botones uniformes**: Todos los botones de paginación usan la clase `.pagination-button` con estilos consistentes
+- **Selector mejorado**: El selector de elementos por página tiene estilos coherentes con los botones
+- **Información de paginación**: Mejor presentación de la información "Mostrando X de Y resultados"
+
+#### Scrollbar Personalizada
+
+- **Scrollbar mejorada**: Scrollbar más visible con 12px de altura/ancho
+- **Esquinas redondeadas**: Mejor apariencia visual con bordes redondeados
+- **Colores coherentes**: Colores que combinan con el diseño general de la tabla
+- **Hover effects**: Efectos de hover en la scrollbar para mejor UX
+
+### 🎨 Mejorado
+
+#### Experiencia de Usuario
+
+- **Scroll contenido**: El scroll horizontal ya no afecta toda la página web
+- **Altura controlada**: La tabla no se desborda verticalmente fuera de la pantalla
+- **Navegación mejorada**: Mejor experiencia de navegación con scroll controlado
+- **Indicadores de scroll**: Indicadores visuales más prominentes (30px de ancho)
+
+#### Estilos CSS Refinados
+
+- **Contenedor principal**: `max-height: 70vh` para desktop, `60vh` para móvil
+- **Tabla responsive**: `table-layout: fixed` para mejor control de columnas
+- **Celdas optimizadas**: Mejor manejo de `min-width` y `max-width`
+- **Header sticky**: Mejor transparencia y backdrop-filter
+
+#### Paginación Coherente
+
+- **Botones consistentes**: Altura uniforme de 36px para todos los botones
+- **Estados claros**: Estados activo, hover y disabled bien definidos
+- **Espaciado mejorado**: Mejor distribución del espacio en la paginación
+- **Responsive móvil**: Mejor adaptación en pantallas pequeñas
+
+### 🔧 Cambiado
+
+#### Arquitectura CSS
+
+- **Scrollbar nativa**: Uso de scrollbar nativa personalizada en lugar de soluciones JavaScript
+- **Contenedor controlado**: El contenedor de tabla ahora controla completamente el overflow
+- **Clases CSS**: Nuevas clases `.pagination-button`, `.pagination-info` para consistencia
+
+#### Template HTML
+
+- **Clases simplificadas**: Uso de clases CSS dedicadas en lugar de múltiples clases inline
+- **Estructura mejorada**: Mejor estructura HTML para la paginación
+- **Estados dinámicos**: Mejor manejo de estados activos y disabled
+
+### 📚 Documentación
+
+#### Correcciones Técnicas
+
+- **Scroll horizontal**: Documentado cómo el scroll se mantiene dentro del componente
+- **Altura de tabla**: Explicado el sistema de altura máxima controlada
+- **Estilos coherentes**: Documentados los nuevos estilos de paginación
+
+## [0.1.3] - 2025-06-06 - Correcciones Críticas de Responsive 🔧
 
 ### 🐛 Corregido
 

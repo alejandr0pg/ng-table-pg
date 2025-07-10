@@ -673,7 +673,8 @@ export class TableComponent implements OnInit, OnChanges {
 
     const item = event.item.data;
     const currentIndex = this.filteredData.indexOf(item);
-    const targetIndex = (targetPage - 1) * this.itemsPerPage;
+    const itemsPerPageNumber = Number(this.itemsPerPage);
+    const targetIndex = (targetPage - 1) * itemsPerPageNumber;
 
     moveItemInArray(this.filteredData, currentIndex, targetIndex);
 
@@ -681,7 +682,7 @@ export class TableComponent implements OnInit, OnChanges {
       item,
       oldIndex: currentIndex,
       newIndex: targetIndex,
-      oldPage: Math.floor(currentIndex / this.itemsPerPage) + 1,
+      oldPage: Math.floor(currentIndex / itemsPerPageNumber) + 1,
       newPage: targetPage,
       globalIndex: targetIndex,
     });
@@ -748,6 +749,8 @@ export class TableComponent implements OnInit, OnChanges {
         );
         return matchesSearch && matchesFilters;
       }) || [];
+    
+    // Reset to page 1 when filters change
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -770,22 +773,36 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   updatePagination() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const itemsPerPageNumber = Number(this.itemsPerPage);
+    const startIndex = (this.currentPage - 1) * itemsPerPageNumber;
     this.paginatedData = this.filteredData.slice(
       startIndex,
-      startIndex + this.itemsPerPage
+      startIndex + itemsPerPageNumber
     );
+    this.updatePageDropLists();
+  }
+
+  onItemsPerPageChange() {
+    this.currentPage = 1;
+    // Ensure itemsPerPage is a number
+    this.itemsPerPage = Number(this.itemsPerPage);
+    this.updatePagination();
   }
 
   goToPage(page: number) {
-    if (page >= 1 && page <= this.getTotalPages()) {
+    const totalPages = this.getTotalPages();
+    if (page >= 1 && page <= totalPages) {
       this.currentPage = page;
+      this.updatePagination();
+    } else if (page > totalPages && totalPages > 0) {
+      // If trying to go to a page beyond total pages, go to last page
+      this.currentPage = totalPages;
       this.updatePagination();
     }
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.filteredData.length / this.itemsPerPage);
+    return Math.ceil(this.filteredData.length / Number(this.itemsPerPage));
   }
 
   getPageNumbers(): number[] {
@@ -1008,13 +1025,14 @@ export class TableComponent implements OnInit, OnChanges {
     this.filteredData.splice(sourceIndex, 1);
     this.filteredData.splice(targetIndex, 0, this.draggedItem);
 
+    const itemsPerPageNumber = Number(this.itemsPerPage);
     // Emitir el evento de cambio
     this.orderChanged.emit({
       item: this.draggedItem,
       oldIndex: sourceIndex,
       newIndex: targetIndex,
-      oldPage: Math.floor(sourceIndex / this.itemsPerPage) + 1,
-      newPage: Math.floor(targetIndex / this.itemsPerPage) + 1,
+      oldPage: Math.floor(sourceIndex / itemsPerPageNumber) + 1,
+      newPage: Math.floor(targetIndex / itemsPerPageNumber) + 1,
       globalIndex: targetIndex,
     });
 
@@ -1084,7 +1102,8 @@ export class TableComponent implements OnInit, OnChanges {
 
     const previousIndex = event.previousIndex;
     const currentIndex = event.currentIndex;
-    const currentPageOffset = (this.currentPage - 1) * this.itemsPerPage;
+    const itemsPerPageNumber = Number(this.itemsPerPage);
+    const currentPageOffset = (this.currentPage - 1) * itemsPerPageNumber;
 
     moveItemInArray(
       this.filteredData,
@@ -1097,9 +1116,9 @@ export class TableComponent implements OnInit, OnChanges {
       oldIndex: previousIndex,
       newIndex: currentIndex,
       oldPage:
-        Math.floor((previousIndex + currentPageOffset) / this.itemsPerPage) + 1,
+        Math.floor((previousIndex + currentPageOffset) / itemsPerPageNumber) + 1,
       newPage:
-        Math.floor((currentIndex + currentPageOffset) / this.itemsPerPage) + 1,
+        Math.floor((currentIndex + currentPageOffset) / itemsPerPageNumber) + 1,
       globalIndex: currentIndex + currentPageOffset,
     });
 
